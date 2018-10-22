@@ -2,7 +2,7 @@ package com.ncapdevi.sample.fragments
 
 import android.content.Context
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +13,7 @@ import com.ncapdevi.sample.R
 /**
  * Created by niccapdevila on 3/26/16.
  */
-open class BaseFragment : Fragment() {
+open class BaseFragment : androidx.fragment.app.Fragment() {
 
     lateinit var btn: Button
     lateinit var mFragmentNavigation: FragmentNavigation
@@ -42,7 +42,7 @@ open class BaseFragment : Fragment() {
     }
 
     interface FragmentNavigation {
-        fun pushFragment(fragment: Fragment)
+        fun pushFragment(fragment: androidx.fragment.app.Fragment)
     }
 
     companion object {

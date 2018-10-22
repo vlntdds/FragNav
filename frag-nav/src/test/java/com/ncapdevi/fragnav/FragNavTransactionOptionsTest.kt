@@ -1,9 +1,9 @@
 package com.ncapdevi.fragnav
 
-import android.support.annotation.AnimRes
-import android.support.annotation.StyleRes
-import android.support.v4.app.FragmentTransaction
-import android.support.v4.util.Pair
+import androidx.annotation.AnimRes
+import androidx.annotation.StyleRes
+import androidx.fragment.app.FragmentTransaction
+import androidx.core.util.Pair
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -33,7 +33,7 @@ class FragNavTransactionOptionsTest {
         val fragNavTransactionOptions = FragNavTransactionOptions.newBuilder()
             .breadCrumbShortTitle(breadCrumbShortTitle)
             .breadCrumbTitle(breadCrumbTitle)
-            .transition(FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+            .transition(androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE)
             .customAnimations(enterAnim, exitAnim, popEnterAnim, popExitAnim)
             .transitionStyle(transitionStyle)
             .addSharedElement(Pair(null, "test"))
@@ -44,7 +44,7 @@ class FragNavTransactionOptionsTest {
 
         assertTrue(transitionStyle == fragNavTransactionOptions.transitionStyle)
 
-        assertTrue(FragmentTransaction.TRANSIT_FRAGMENT_FADE == fragNavTransactionOptions.transition)
+        assertTrue(androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE == fragNavTransactionOptions.transition)
 
 
         assertTrue(enterAnim == fragNavTransactionOptions.enterAnimation)

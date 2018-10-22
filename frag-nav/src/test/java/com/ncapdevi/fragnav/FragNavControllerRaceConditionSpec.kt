@@ -1,8 +1,8 @@
 package com.ncapdevi.fragnav
 
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentTransaction
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import com.ncapdevi.fragnav.tabhistory.UniqueTabHistoryStrategy
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doAnswer
@@ -107,12 +107,12 @@ private fun waitIfNecessary() {
     }
 }
 
-private fun getFragmentMock(fakeFragmentManager: FakeFragmentManager) = mock<Fragment> {
+private fun getFragmentMock(fakeFragmentManager: FakeFragmentManager) = mock<androidx.fragment.app.Fragment> {
     on { isAdded } doAnswer { fakeFragmentManager.activeFragments.containsValue(this.mock) }
     on { isDetached } doAnswer { fakeFragmentManager.detachedFragments.contains(this.mock) }
 }
 
-private fun getRootFragmentListenerMock(fragments: List<Fragment>): FragNavController.RootFragmentListener {
+private fun getRootFragmentListenerMock(fragments: List<androidx.fragment.app.Fragment>): FragNavController.RootFragmentListener {
     return mock {
         on { numberOfRootFragments } doReturn fragments.size
         on { getRootFragment(any()) } doAnswer {
@@ -123,25 +123,25 @@ private fun getRootFragmentListenerMock(fragments: List<Fragment>): FragNavContr
 
 class FakeFragmentManager {
     private val operations = mutableListOf<FakeFragmentOperation>()
-    val activeFragments = mutableMapOf<String, Fragment>()
-    val detachedFragments = mutableSetOf<Fragment>()
+    val activeFragments = mutableMapOf<String, androidx.fragment.app.Fragment>()
+    val detachedFragments = mutableSetOf<androidx.fragment.app.Fragment>()
 
-    fun create(): FragmentManager {
+    fun create(): androidx.fragment.app.FragmentManager {
         operations.clear()
         activeFragments.clear()
         detachedFragments.clear()
-        return mock<FragmentManager> {
+        return mock<androidx.fragment.app.FragmentManager> {
             on { findFragmentByTag(any()) } doAnswer { activeFragments[it.getArgument<String>(0)] }
         }.apply {
             doAnswer { FakeFragmentTransaction(this@FakeFragmentManager).create() }.whenever(this).beginTransaction()
         }
     }
 
-    fun add(tag: String, fragment: Fragment) {
+    fun add(tag: String, fragment: androidx.fragment.app.Fragment) {
         activeFragments += tag to fragment
     }
 
-    fun remove(fragment: Fragment) {
+    fun remove(fragment: androidx.fragment.app.Fragment) {
         activeFragments.values.removeAll {
             it == fragment
         }
@@ -156,11 +156,11 @@ class FakeFragmentManager {
         (expectedOperations == operations).shouldBeTrue()
     }
 
-    fun attach(fragment: Fragment) {
+    fun attach(fragment: androidx.fragment.app.Fragment) {
         detachedFragments -= fragment
     }
 
-    fun detach(fragment: Fragment) {
+    fun detach(fragment: androidx.fragment.app.Fragment) {
         detachedFragments += fragment
     }
 }
@@ -169,30 +169,30 @@ class FakeFragmentTransaction(private val parent: FakeFragmentManager) {
     private val pendingActions = mutableListOf<FakeFragmentOperation>()
     private val executor = Executors.newSingleThreadScheduledExecutor()
 
-    fun create(): FragmentTransaction {
+    fun create(): androidx.fragment.app.FragmentTransaction {
         return mock {
             on { add(any(), any(), any()) } doAnswer {
-                pendingActions.add(Add(it.getArgument<Fragment>(1), it.getArgument<String>(2)))
+                pendingActions.add(Add(it.getArgument<androidx.fragment.app.Fragment>(1), it.getArgument<String>(2)))
                 this.mock
             }
             on { remove(any()) } doAnswer {
-                pendingActions.add(Remove(it.getArgument<Fragment>(0)))
+                pendingActions.add(Remove(it.getArgument<androidx.fragment.app.Fragment>(0)))
                 this.mock
             }
             on { attach(any()) } doAnswer {
-                pendingActions.add(Attach(it.getArgument<Fragment>(0)))
+                pendingActions.add(Attach(it.getArgument<androidx.fragment.app.Fragment>(0)))
                 this.mock
             }
             on { detach(any()) } doAnswer {
-                pendingActions.add(Detach(it.getArgument<Fragment>(0)))
+                pendingActions.add(Detach(it.getArgument<androidx.fragment.app.Fragment>(0)))
                 this.mock
             }
             on { show(any()) } doAnswer {
-                pendingActions.add(Show(it.getArgument<Fragment>(0)))
+                pendingActions.add(Show(it.getArgument<androidx.fragment.app.Fragment>(0)))
                 this.mock
             }
             on { hide(any()) } doAnswer {
-                pendingActions.add(Hide(it.getArgument<Fragment>(0)))
+                pendingActions.add(Hide(it.getArgument<androidx.fragment.app.Fragment>(0)))
                 this.mock
             }
             on { commit() } doAnswer {
@@ -237,10 +237,10 @@ class FakeFragmentTransaction(private val parent: FakeFragmentManager) {
 }
 
 sealed class FakeFragmentOperation
-data class Add(val fragment: Fragment, val tag: String) : FakeFragmentOperation()
-data class Attach(val fragment: Fragment) : FakeFragmentOperation()
-data class Detach(val fragment: Fragment) : FakeFragmentOperation()
-data class Remove(val fragment: Fragment) : FakeFragmentOperation()
-data class Hide(val fragment: Fragment) : FakeFragmentOperation()
-data class Show(val fragment: Fragment) : FakeFragmentOperation()
+data class Add(val fragment: androidx.fragment.app.Fragment, val tag: String) : FakeFragmentOperation()
+data class Attach(val fragment: androidx.fragment.app.Fragment) : FakeFragmentOperation()
+data class Detach(val fragment: androidx.fragment.app.Fragment) : FakeFragmentOperation()
+data class Remove(val fragment: androidx.fragment.app.Fragment) : FakeFragmentOperation()
+data class Hide(val fragment: androidx.fragment.app.Fragment) : FakeFragmentOperation()
+data class Show(val fragment: androidx.fragment.app.Fragment) : FakeFragmentOperation()
 object Commit : FakeFragmentOperation()
