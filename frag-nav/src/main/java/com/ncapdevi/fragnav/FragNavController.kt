@@ -378,7 +378,7 @@ class FragNavController constructor(private val fragmentManger: androidx.fragmen
             if (!fragmentStacksTags[currentStackIndex].isEmpty()) {
                 val fragmentTag = fragmentStacksTags[currentStackIndex].peek()
                 fragment = fragmentManger.findFragmentByTag(fragmentTag)
-                ft.add(containerId, fragment, fragmentTag)
+                ft.add(containerId, fragment!!, fragmentTag)
                 commitTransaction(ft, transactionOptions)
             } else {
                 fragment = getRootFragment(currentStackIndex)
@@ -442,7 +442,7 @@ class FragNavController constructor(private val fragmentManger: androidx.fragmen
                 if (fragmentStack.isNotEmpty()) {
                     val fragmentTag = fragmentStack.peek()
                     fragment = fragmentManger.findFragmentByTag(fragmentTag)
-                    ft.add(containerId, fragment, fragmentTag)
+                    ft.add(containerId, fragment!!, fragmentTag)
                     commitTransaction(ft, transactionOptions)
                 } else {
                     fragment = getRootFragment(currentStackIndex)
@@ -666,8 +666,8 @@ class FragNavController constructor(private val fragmentManger: androidx.fragmen
 
                 options.sharedElements.forEach { sharedElement ->
                     addSharedElement(
-                            sharedElement.first,
-                            sharedElement.second
+                            sharedElement.first!!,
+                            sharedElement.second!!
                     )
                 }
 
