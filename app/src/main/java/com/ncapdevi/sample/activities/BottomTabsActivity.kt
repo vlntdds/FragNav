@@ -1,8 +1,8 @@
 package com.ncapdevi.sample.activities
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.appcompat.app.AppCompatActivity
 import android.util.Log
 import android.view.MenuItem
 import com.ncapdevi.fragnav.FragNavController
@@ -83,26 +83,26 @@ class BottomTabsActivity : AppCompatActivity(), BaseFragment.FragmentNavigation,
 
     }
 
-    override fun pushFragment(fragment: Fragment) {
+    override fun pushFragment(fragment: androidx.fragment.app.Fragment) {
         fragNavController.pushFragment(fragment)
 
     }
 
-    override fun onTabTransaction(fragment: Fragment?, index: Int) {
+    override fun onTabTransaction(fragment: androidx.fragment.app.Fragment?, index: Int) {
         // If we have a backstack, show the back button
         supportActionBar?.setDisplayHomeAsUpEnabled(fragNavController.isRootFragment.not())
 
     }
 
 
-    override fun onFragmentTransaction(fragment: Fragment?, transactionType: FragNavController.TransactionType) {
+    override fun onFragmentTransaction(fragment: androidx.fragment.app.Fragment?, transactionType: FragNavController.TransactionType) {
         //do fragmentty stuff. Maybe change title, I'm not going to tell you how to live your life
         // If we have a backstack, show the back button
         supportActionBar?.setDisplayHomeAsUpEnabled(fragNavController.isRootFragment.not())
 
     }
 
-    override fun getRootFragment(index: Int): Fragment {
+    override fun getRootFragment(index: Int): androidx.fragment.app.Fragment {
         when (index) {
             INDEX_RECENTS -> return RecentsFragment.newInstance(0)
             INDEX_FAVORITES -> return FavoritesFragment.newInstance(0)

@@ -4,13 +4,13 @@ package com.ncapdevi.fragnav
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.support.annotation.CheckResult
-import android.support.annotation.IdRes
-import android.support.annotation.IntDef
-import android.support.v4.app.DialogFragment
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentManager
-import android.support.v4.app.FragmentTransaction
+import androidx.annotation.CheckResult
+import androidx.annotation.IdRes
+import androidx.annotation.IntDef
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentManager
+import androidx.fragment.app.FragmentTransaction
 import com.ncapdevi.fragnav.tabhistory.*
 import com.ncapdevi.fragnav.tabhistory.FragNavTabHistoryController.Companion.UNIQUE_TAB_HISTORY
 import com.ncapdevi.fragnav.tabhistory.FragNavTabHistoryController.Companion.UNLIMITED_TAB_HISTORY
@@ -29,10 +29,10 @@ import java.util.*
  *
  * Originally Created March 2016
  */
-class FragNavController constructor(private val fragmentManger: FragmentManager, @IdRes private val containerId: Int) {
+class FragNavController constructor(private val fragmentManger: androidx.fragment.app.FragmentManager, @IdRes private val containerId: Int) {
 
     //region Public properties
-    var rootFragments: List<Fragment>? = null
+    var rootFragments: List<androidx.fragment.app.Fragment>? = null
         set(value) {
             if (value != null) {
                 if (rootFragmentListener != null) {
@@ -75,8 +75,8 @@ class FragNavController constructor(private val fragmentManger: FragmentManager,
     //region Private properties
     private val fragmentStacksTags: MutableList<Stack<String>> = ArrayList()
     private var tagCount: Int = 0
-    private var mCurrentFrag: Fragment? = null
-    private var mCurrentDialogFrag: DialogFragment? = null
+    private var mCurrentFrag: androidx.fragment.app.Fragment? = null
+    private var mCurrentDialogFrag: androidx.fragment.app.DialogFragment? = null
 
     private var executingTransaction: Boolean = false
     private var fragNavTabHistoryController: FragNavTabHistoryController = CurrentTabHistoryController(DefaultFragNavPopController())
@@ -90,7 +90,7 @@ class FragNavController constructor(private val fragmentManger: FragmentManager,
      *
      * @return Fragment the current frag to be returned
      */
-    val currentFrag: Fragment?
+    val currentFrag: androidx.fragment.app.Fragment?
         get() {
             //Attempt to used stored current fragment
             if (mCurrentFrag?.isAdded == true && mCurrentFrag?.isDetached?.not() == true) {
@@ -112,16 +112,16 @@ class FragNavController constructor(private val fragmentManger: FragmentManager,
     /**
      * @return Current DialogFragment being displayed. Null if none
      */
-    val currentDialogFrag: DialogFragment?
+    val currentDialogFrag: androidx.fragment.app.DialogFragment?
         @CheckResult
         get() {
             if (mCurrentDialogFrag != null) {
                 return mCurrentDialogFrag
             } else {
                 //Else try to find one in the FragmentManager
-                val fragmentManager: FragmentManager = this.currentFrag?.childFragmentManager
+                val fragmentManager: androidx.fragment.app.FragmentManager = this.currentFrag?.childFragmentManager
                         ?: this.fragmentManger
-                mCurrentDialogFrag = fragmentManager.fragments?.firstOrNull { it is DialogFragment } as DialogFragment?
+                mCurrentDialogFrag = fragmentManager.fragments?.firstOrNull { it is androidx.fragment.app.DialogFragment } as androidx.fragment.app.DialogFragment?
             }
             return mCurrentDialogFrag
         }
@@ -141,7 +141,7 @@ class FragNavController constructor(private val fragmentManger: FragmentManager,
      *
      * @return Current stack
      */
-    val currentStack: Stack<Fragment>?
+    val currentStack: Stack<androidx.fragment.app.Fragment>?
         @CheckResult
         get() = getStack(currentStackIndex)
 
@@ -268,7 +268,7 @@ class FragNavController constructor(private val fragmentManger: FragmentManager,
 
             removeCurrentFragment(ft, shouldDetachAttachOnSwitch())
 
-            var fragment: Fragment? = null
+            var fragment: androidx.fragment.app.Fragment? = null
             if (index == NO_TAB) {
                 commitTransaction(ft, transactionOptions)
             } else {
@@ -299,7 +299,7 @@ class FragNavController constructor(private val fragmentManger: FragmentManager,
      * @param transactionOptions Transaction options to be displayed
      */
     @JvmOverloads
-    fun pushFragment(fragment: Fragment?, transactionOptions: FragNavTransactionOptions? = defaultTransactionOptions) {
+    fun pushFragment(fragment: androidx.fragment.app.Fragment?, transactionOptions: FragNavTransactionOptions? = defaultTransactionOptions) {
         if (fragment != null && currentStackIndex != NO_TAB) {
             val ft = createTransactionWithOptions(transactionOptions, false)
 
@@ -357,7 +357,7 @@ class FragNavController constructor(private val fragmentManger: FragmentManager,
             return poppableSize
         }
 
-        var fragment: Fragment?
+        var fragment: androidx.fragment.app.Fragment?
         val ft = createTransactionWithOptions(transactionOptions, true)
 
         //Pop the number of the fragments on the stack and remove them from the FragmentManager
@@ -421,7 +421,7 @@ class FragNavController constructor(private val fragmentManger: FragmentManager,
 
         // Only need to start popping and reattach if the stack is greater than 1
         if (fragmentStack.size > 1) {
-            var fragment: Fragment?
+            var fragment: androidx.fragment.app.Fragment?
             val ft = createTransactionWithOptions(transactionOptions, true)
 
             //Pop all of the fragments on the stack and remove them from the FragmentManager
@@ -471,7 +471,7 @@ class FragNavController constructor(private val fragmentManger: FragmentManager,
      * @param transactionOptions Transaction options to be displayed
      */
     @JvmOverloads
-    fun replaceFragment(fragment: Fragment, transactionOptions: FragNavTransactionOptions? = defaultTransactionOptions) {
+    fun replaceFragment(fragment: androidx.fragment.app.Fragment, transactionOptions: FragNavTransactionOptions? = defaultTransactionOptions) {
         val poppingFrag = currentFrag
 
         if (poppingFrag != null) {
@@ -506,14 +506,14 @@ class FragNavController constructor(private val fragmentManger: FragmentManager,
             mCurrentDialogFrag = null
         } else {
             val currentFrag = this.currentFrag
-            val fragmentManager: FragmentManager =
+            val fragmentManager: androidx.fragment.app.FragmentManager =
                     if (currentFrag != null && currentFrag.isAdded) {
                         currentFrag.childFragmentManager
                     } else {
                         this.fragmentManger
                     }
             fragmentManager.fragments?.forEach {
-                if (it is DialogFragment) {
+                if (it is androidx.fragment.app.DialogFragment) {
                     it.dismiss()
                 }
             }
@@ -525,12 +525,12 @@ class FragNavController constructor(private val fragmentManger: FragmentManager,
      *
      * @param dialogFragment The Fragment to be Displayed
      */
-    fun showDialogFragment(dialogFragment: DialogFragment?) {
+    fun showDialogFragment(dialogFragment: androidx.fragment.app.DialogFragment?) {
         //Clear any current dialog fragments
         clearDialogFragment()
 
         if (dialogFragment != null) {
-            val fragmentManager: FragmentManager = this.currentFrag?.childFragmentManager
+            val fragmentManager: androidx.fragment.app.FragmentManager = this.currentFrag?.childFragmentManager
                     ?: this.fragmentManger
             mCurrentDialogFrag = dialogFragment
             try {
@@ -556,8 +556,8 @@ class FragNavController constructor(private val fragmentManger: FragmentManager,
      */
     @CheckResult
     @Throws(IllegalStateException::class)
-    private fun getRootFragment(index: Int): Fragment {
-        var fragment: Fragment? = null
+    private fun getRootFragment(index: Int): androidx.fragment.app.Fragment {
+        var fragment: androidx.fragment.app.Fragment? = null
 
         if (fragmentStacksTags[index].isNotEmpty()) {
             fragment = fragmentManger.findFragmentByTag(fragmentStacksTags[index].peek())
@@ -585,9 +585,9 @@ class FragNavController constructor(private val fragmentManger: FragmentManager,
      * @param ft current fragment transaction
      * @return Fragment if we were able to find and reattach it
      */
-    private fun addPreviousFragment(ft: FragmentTransaction, isAttach: Boolean): Fragment? {
+    private fun addPreviousFragment(ft: androidx.fragment.app.FragmentTransaction, isAttach: Boolean): androidx.fragment.app.Fragment? {
         val fragmentStack = fragmentStacksTags[currentStackIndex]
-        var fragment: Fragment? = null
+        var fragment: androidx.fragment.app.Fragment? = null
         if (fragmentStack.isNotEmpty()) {
             fragment = getFragment(fragmentStack.peek())
             if (fragment != null) {
@@ -606,7 +606,7 @@ class FragNavController constructor(private val fragmentManger: FragmentManager,
      *
      * @param ft the current transaction being performed
      */
-    private fun removeCurrentFragment(ft: FragmentTransaction, isDetach: Boolean) {
+    private fun removeCurrentFragment(ft: androidx.fragment.app.FragmentTransaction, isDetach: Boolean) {
         currentFrag?.let {
             if (isDetach) {
                 ft.detach(it)
@@ -623,11 +623,11 @@ class FragNavController constructor(private val fragmentManger: FragmentManager,
      * @return a unique tag using the fragment's class name
      */
     @CheckResult
-    private fun generateTag(fragment: Fragment): String {
+    private fun generateTag(fragment: androidx.fragment.app.Fragment): String {
         return fragment.javaClass.name + ++tagCount
     }
 
-    private fun getFragment(tag: String): Fragment? {
+    private fun getFragment(tag: String): androidx.fragment.app.Fragment? {
         return fragmentManger.findFragmentByTag(tag)
     }
 
@@ -651,7 +651,7 @@ class FragNavController constructor(private val fragmentManger: FragmentManager,
      */
     @SuppressLint("CommitTransaction")
     @CheckResult
-    private fun createTransactionWithOptions(transactionOptions: FragNavTransactionOptions?, isPopping: Boolean): FragmentTransaction {
+    private fun createTransactionWithOptions(transactionOptions: FragNavTransactionOptions?, isPopping: Boolean): androidx.fragment.app.FragmentTransaction {
         return fragmentManger.beginTransaction().apply {
             transactionOptions?.also { options ->
                 if (isPopping) {
@@ -685,7 +685,7 @@ class FragNavController constructor(private val fragmentManger: FragmentManager,
      * @param fragmentTransaction
      * @param transactionOptions
      */
-    private fun commitTransaction(fragmentTransaction: FragmentTransaction, transactionOptions: FragNavTransactionOptions?) {
+    private fun commitTransaction(fragmentTransaction: androidx.fragment.app.FragmentTransaction, transactionOptions: FragNavTransactionOptions?) {
         if (transactionOptions?.allowStateLoss == true) {
             fragmentTransaction.commitAllowingStateLoss()
         } else {
@@ -712,7 +712,7 @@ class FragNavController constructor(private val fragmentManger: FragmentManager,
      */
     @CheckResult
     @Throws(IndexOutOfBoundsException::class)
-    fun getStack(@TabIndex index: Int): Stack<Fragment>? {
+    fun getStack(@TabIndex index: Int): Stack<androidx.fragment.app.Fragment>? {
         if (index == NO_TAB) {
             return null
         }
@@ -839,7 +839,7 @@ class FragNavController constructor(private val fragmentManger: FragmentManager,
 
 
     // Declare Transit Styles
-    @IntDef(FragmentTransaction.TRANSIT_NONE, FragmentTransaction.TRANSIT_FRAGMENT_OPEN, FragmentTransaction.TRANSIT_FRAGMENT_CLOSE, FragmentTransaction.TRANSIT_FRAGMENT_FADE)
+    @IntDef(androidx.fragment.app.FragmentTransaction.TRANSIT_NONE, androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_OPEN, androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_CLOSE, androidx.fragment.app.FragmentTransaction.TRANSIT_FRAGMENT_FADE)
     @kotlin.annotation.Retention(AnnotationRetention.SOURCE)
     internal annotation class Transit
 
@@ -858,14 +858,14 @@ class FragNavController constructor(private val fragmentManger: FragmentManager,
          * @param index the index that the root of the stack Fragment needs to go
          * @return the new Fragment
          */
-        fun getRootFragment(index: Int): Fragment
+        fun getRootFragment(index: Int): androidx.fragment.app.Fragment
     }
 
     interface TransactionListener {
 
-        fun onTabTransaction(fragment: Fragment?, index: Int)
+        fun onTabTransaction(fragment: androidx.fragment.app.Fragment?, index: Int)
 
-        fun onFragmentTransaction(fragment: Fragment?, transactionType: TransactionType)
+        fun onFragmentTransaction(fragment: androidx.fragment.app.Fragment?, transactionType: TransactionType)
     }
 
     inner class DefaultFragNavPopController : com.ncapdevi.fragnav.FragNavPopController {

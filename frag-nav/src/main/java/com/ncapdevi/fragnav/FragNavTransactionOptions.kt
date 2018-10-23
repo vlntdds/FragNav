@@ -1,9 +1,9 @@
 package com.ncapdevi.fragnav
 
-import android.support.annotation.AnimRes
-import android.support.annotation.StyleRes
-import android.support.v4.app.FragmentTransaction
-import android.support.v4.util.Pair
+import androidx.annotation.AnimRes
+import androidx.annotation.StyleRes
+import androidx.fragment.app.FragmentTransaction
+import androidx.core.util.Pair
 import android.view.View
 
 
@@ -28,7 +28,7 @@ class FragNavTransactionOptions private constructor(builder: Builder) {
 
     class Builder {
         var sharedElements: MutableList<Pair<View, String>> = mutableListOf()
-        var transition: Int = FragmentTransaction.TRANSIT_NONE
+        var transition: Int = androidx.fragment.app.FragmentTransaction.TRANSIT_NONE
         var enterAnimation: Int = 0
         var exitAnimation: Int = 0
         var transitionStyle: Int = 0

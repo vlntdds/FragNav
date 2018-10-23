@@ -1,8 +1,8 @@
 package com.ncapdevi.fragnav
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.app.FragmentActivity
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import android.widget.FrameLayout
 import com.nhaarman.mockitokotlin2.any
 import com.nhaarman.mockitokotlin2.doReturn
@@ -22,7 +22,7 @@ import java.util.*
  */
 @RunWith(RobolectricTestRunner::class)
 class FragNavControllerTest : FragNavController.TransactionListener {
-    private val activity = Robolectric.buildActivity(FragmentActivity::class.java).create().get()
+    private val activity = Robolectric.buildActivity(androidx.fragment.app.FragmentActivity::class.java).create().get()
     private lateinit var mFragNavController: FragNavController
 
     private var fragmentManager = activity.supportFragmentManager
@@ -36,9 +36,9 @@ class FragNavControllerTest : FragNavController.TransactionListener {
 
     @Test
     fun testConstructionWhenRestoringFromBundle() {
-        val rootFragments = ArrayList<Fragment>()
-        rootFragments.add(Fragment())
-        rootFragments.add(Fragment())
+        val rootFragments = ArrayList<androidx.fragment.app.Fragment>()
+        rootFragments.add(androidx.fragment.app.Fragment())
+        rootFragments.add(androidx.fragment.app.Fragment())
 
         val mFragNavController = FragNavController(fragmentManager, frameLayout.id).apply {
             this.rootFragments = rootFragments
@@ -47,9 +47,9 @@ class FragNavControllerTest : FragNavController.TransactionListener {
 
 
         mFragNavController.switchTab(FragNavController.TAB2)
-        mFragNavController.pushFragment(Fragment())
-        mFragNavController.pushFragment(Fragment())
-        mFragNavController.pushFragment(Fragment())
+        mFragNavController.pushFragment(androidx.fragment.app.Fragment())
+        mFragNavController.pushFragment(androidx.fragment.app.Fragment())
+        mFragNavController.pushFragment(androidx.fragment.app.Fragment())
 
         val currentFragment = mFragNavController.currentFrag
 
@@ -66,9 +66,9 @@ class FragNavControllerTest : FragNavController.TransactionListener {
 
     @Test
     fun testConstructionWhenMultipleFragments() {
-        val rootFragments = ArrayList<Fragment>()
-        rootFragments.add(Fragment())
-        rootFragments.add(Fragment())
+        val rootFragments = ArrayList<androidx.fragment.app.Fragment>()
+        rootFragments.add(androidx.fragment.app.Fragment())
+        rootFragments.add(androidx.fragment.app.Fragment())
 
         mFragNavController = FragNavController(fragmentManager, frameLayout.id).apply {
             this.rootFragments = rootFragments
@@ -82,9 +82,9 @@ class FragNavControllerTest : FragNavController.TransactionListener {
 
     @Test
     fun testConstructionWhenMultipleFragmentsEagerMode() {
-        val rootFragments = ArrayList<Fragment>()
-        rootFragments.add(Fragment())
-        rootFragments.add(Fragment())
+        val rootFragments = ArrayList<androidx.fragment.app.Fragment>()
+        rootFragments.add(androidx.fragment.app.Fragment())
+        rootFragments.add(androidx.fragment.app.Fragment())
 
         mFragNavController = FragNavController(fragmentManager, frameLayout.id).apply {
             this.rootFragments = rootFragments
@@ -102,10 +102,10 @@ class FragNavControllerTest : FragNavController.TransactionListener {
 
     @Test(expected = IllegalArgumentException::class)
     fun testConstructionWhenTooManyRootFragments() {
-        val rootFragments = ArrayList<Fragment>()
+        val rootFragments = ArrayList<androidx.fragment.app.Fragment>()
 
         for (i in 0..20) {
-            rootFragments.add(Fragment())
+            rootFragments.add(androidx.fragment.app.Fragment())
         }
 
         mFragNavController = FragNavController(fragmentManager, frameLayout.id).apply {
@@ -115,9 +115,9 @@ class FragNavControllerTest : FragNavController.TransactionListener {
 
     @Test
     fun testConstructionWhenMultipleFragmentsAndNoTabSelected() {
-        val rootFragments = ArrayList<Fragment>()
-        rootFragments.add(Fragment())
-        rootFragments.add(Fragment())
+        val rootFragments = ArrayList<androidx.fragment.app.Fragment>()
+        rootFragments.add(androidx.fragment.app.Fragment())
+        rootFragments.add(androidx.fragment.app.Fragment())
 
         mFragNavController = FragNavController(fragmentManager, frameLayout.id).apply {
             this.rootFragments = rootFragments
@@ -133,7 +133,7 @@ class FragNavControllerTest : FragNavController.TransactionListener {
     @Test
     fun testConstructionWhenRootFragmentListenerAndTabSelected() {
         val rootFragmentListener = mock<FragNavController.RootFragmentListener>()
-        doReturn(Fragment()).whenever(rootFragmentListener)
+        doReturn(androidx.fragment.app.Fragment()).whenever(rootFragmentListener)
                 .getRootFragment(any())
         doReturn(5).whenever(rootFragmentListener).numberOfRootFragments
 
@@ -162,7 +162,7 @@ class FragNavControllerTest : FragNavController.TransactionListener {
     fun pushPopClear() {
         mFragNavController = FragNavController(fragmentManager, frameLayout.id).apply {
             transactionListener = this@FragNavControllerTest
-            rootFragments = listOf(Fragment())
+            rootFragments = listOf(androidx.fragment.app.Fragment())
         }
 
         mFragNavController.initialize()
@@ -173,13 +173,13 @@ class FragNavControllerTest : FragNavController.TransactionListener {
         var size = mFragNavController.currentStack!!.size
 
 
-        mFragNavController.pushFragment(Fragment())
+        mFragNavController.pushFragment(androidx.fragment.app.Fragment())
         Assert.assertTrue(mFragNavController.currentStack!!.size == ++size)
 
-        mFragNavController.pushFragment(Fragment())
+        mFragNavController.pushFragment(androidx.fragment.app.Fragment())
         Assert.assertTrue(mFragNavController.currentStack!!.size == ++size)
 
-        mFragNavController.pushFragment(Fragment())
+        mFragNavController.pushFragment(androidx.fragment.app.Fragment())
         Assert.assertTrue(mFragNavController.currentStack!!.size == ++size)
 
         mFragNavController.popFragment()
@@ -191,11 +191,11 @@ class FragNavControllerTest : FragNavController.TransactionListener {
     }
 
 
-    override fun onTabTransaction(fragment: Fragment?, index: Int) {
+    override fun onTabTransaction(fragment: androidx.fragment.app.Fragment?, index: Int) {
         Assert.assertNotNull(fragment)
     }
 
-    override fun onFragmentTransaction(fragment: Fragment?, transactionType: FragNavController.TransactionType) {
+    override fun onFragmentTransaction(fragment: androidx.fragment.app.Fragment?, transactionType: FragNavController.TransactionType) {
         Assert.assertNotNull(mFragNavController)
 
     }
